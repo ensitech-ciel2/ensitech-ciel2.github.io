@@ -1,3 +1,67 @@
+from pathlib import Path
+import json
+import re
+import shutil
+import html
+import unicodedata
+import urllib.parse
+
+import markdown
+
+ROOT = Path(__file__).resolve().parents[1]
+COURSES = ROOT / "cours"
+OUT = ROOT / "site_gen"
+
+if OUT.exists():
+    shutil.rmtree(OUT)
+OUT.mkdir(parents=True)
+
+shutil.copytree(ROOT / "site" / "assets", OUT / "assets")
+
+
+def slug(value):
+    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"[^a-z0-9]+", "-", value).strip("-") or "cours"
+
+
+files = sorted(COURSES.rglob("*.md"))
+keys = {
+    path: slug(
+        path.relative_to(COURSES).as_posix().replace("/", "-").removesuffix(".md")
+    )
+    for path in files
+}
+stems = {path.stem.lower(): path for path in files}
+records = []
+
+# MathJax recognizes these delimiters. Protect escaped dollar signs so they are
+# treated as literal text rather than the start of a math expression.
+def protect_escaped_dollars(text):
+    return text.replace(r"\$", "&#36;")
+
+
+for src in files:
+    rel = src.relative_to(COURSES).as_posix()
+    subject = src.parent.relative_to(COURSES).as_posix().split("/")[0]
+    key = keys[src]
+    outdir = OUT / "cours" / key
+    outdir.mkdir(parents=True, exist_ok=True)
+
+    raw = src.read_text(encoding="utf-8")
+
+    # Convert wiki-style links [[Course Name]] to links between generated pages.
+    def wiki(match):
+        name = match.group(1).strip()
+        target = stems.get(name.lower())
+        if target:
+            href = "../" + keys[target] + "/index.html"
+            return "[" + name + "](" + href + ")"
+        return "`" + name + "`"
+
+    raw = re.sub(r"\[\[([^\]]+)\]\]", wiki, raw)
+    raw = protect_escaped_dollars(raw)
+
+    # Copy local images next to the generated page, preserving relative paths.
     for match in re.finditer(r"!\[[^\]]*\]\(([^)]+)\)", raw):
         target = match.group(1).split()[0].strip("<>")
         if re.match(r"^(?:[a-z]+:)?//|^data:", target, re.I):
