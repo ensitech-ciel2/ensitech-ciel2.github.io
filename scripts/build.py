@@ -84,7 +84,7 @@ for src in files:
         output_format="html5",
     )
 
-  title = next(
+    title = next(
     (line.lstrip("# ").strip() for line in raw.splitlines() if line.startswith("# ")),
     src.stem,
     )
