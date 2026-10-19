@@ -84,10 +84,12 @@ for src in files:
         output_format="html5",
     )
 
-    title = next(
-        (line.lstrip("# ").strip() for line in raw.splitlines() if line.startswith("# ")),
-        src.stem,
+  title = next(
+    (line.lstrip("# ").strip() for line in raw.splitlines() if line.startswith("# ")),
+    src.stem,
     )
+
+    title = re.sub(r"\s*-\s*Cours\s*$", "", title, flags=re.IGNORECASE).strip()
     pdf_name = slug(src.stem) + ".pdf"
     pdf_rel = "cours/" + key + "/" + pdf_name
 
