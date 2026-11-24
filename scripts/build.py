@@ -99,6 +99,9 @@ for src in files:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)} — Mes cours</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/style.css">
 <script>
 const savedTheme = localStorage.getItem('theme');
@@ -117,17 +120,19 @@ window.MathJax = {{
 </script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
-<body>
+<body data-page="reader" data-catalog="../../catalog.json">
 <header class="topbar">
-  <a class="brand" href="../../index.html">📚 Mes cours</a>
-  <nav>
-    <a href="../../index.html">Accueil</a>
-    <button id="themeToggle" class="theme-toggle" type="button">☀ / ☾</button>
+  <a class="brand" href="../../index.html" aria-label="CIEL, accueil"><span class="brand-mark">c.</span><span>ciel<span class="brand-light"> / cours</span></span></a>
+  <nav class="main-nav" aria-label="Navigation principale">
+    <a class="nav-link" href="../../index.html"><span class="nav-icon">✳</span>Nouveautés</a>
+    <a class="nav-link" href="../../bibliotheque.html"><span class="nav-icon">▦</span>Bibliothèque</a>
+    <a class="nav-link" href="../../parametres.html"><span class="nav-icon">⚙</span>Paramètres</a>
   </nav>
+  <button id="themeToggle" class="icon-button theme-toggle" type="button" aria-label="Changer de thème" title="Changer de thème"><span class="theme-glyph">☼</span></button>
 </header>
 <main class="reading">
   <div class="reader-actions">
-    <a class="back" href="../../index.html">← Retour au dashboard</a>
+    <a class="back" href="../../bibliotheque.html">← Retour à la bibliothèque</a>
     <a class="button" href="{html.escape(pdf_name)}" download>Télécharger le PDF ↓</a>
   </div>
   <article class="prose">{body}</article>
@@ -150,7 +155,8 @@ window.MathJax = {{
 (OUT / "catalog.json").write_text(
     json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8"
 )
-shutil.copy2(ROOT / "site" / "index.html", OUT / "index.html")
+for static_page in ["index.html", "bibliotheque.html", "parametres.html"]:
+    shutil.copy2(ROOT / "site" / static_page, OUT / static_page)
 
 # Generate PDFs only after MathJax has finished rendering the equations.
 from playwright.sync_api import sync_playwright

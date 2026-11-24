@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bibliothèque — CIEL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <script>try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-page="library" data-catalog="catalog.json">
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="CIEL, accueil"><span class="brand-mark">c.</span><span>ciel<span class="brand-light"> / cours</span></span></a>
+    <nav class="main-nav" aria-label="Navigation principale">
+      <a class="nav-link" href="./index.html"><span class="nav-icon">✳</span>Nouveautés</a>
+      <a class="nav-link active" href="./bibliotheque.html"><span class="nav-icon">▦</span>Bibliothèque</a>
+      <a class="nav-link" href="./parametres.html"><span class="nav-icon">⚙</span>Paramètres</a>
+    </nav>
+    <button id="themeToggle" class="icon-button theme-toggle" type="button" aria-label="Changer de thème" title="Changer de thème"><span class="theme-glyph">☼</span></button>
+  </header>
+  <main class="page-shell library-page">
+    <section class="library-intro">
+      <div class="overline">TON PROGRAMME, BIEN ORGANISÉ</div>
+      <h1>La <em>bibliothèque.</em></h1>
+      <p class="welcome-text">Tous tes supports de cours, rangés par matière et faciles à retrouver.</p>
+      <label class="searchbox" for="searchInput"><span class="search-symbol">⌕</span><input id="searchInput" type="search" placeholder="Rechercher un cours par son nom…" autocomplete="off"><kbd>⌘ K</kbd></label>
+      <div class="library-toolbar"><span id="courseCount" class="result-count">Chargement des cours…</span><button id="clearSearch" class="clear-search" type="button" hidden>Effacer la recherche ×</button></div>
+    </section>
+    <div id="subjectFilters" class="subject-filters" aria-label="Filtrer par matière"></div>
+    <section id="libraryContent" class="library-content" aria-live="polite"><div class="loading-state">Organisation de la bibliothèque…</div></section>
+    <footer class="site-footer"><span>CIEL <span class="footer-separator">·</span> Bibliothèque</span><span>Un espace pour retrouver l'essentiel.</span></footer>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>
